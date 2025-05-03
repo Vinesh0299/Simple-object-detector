@@ -1,4 +1,5 @@
 torch
+ultralytics
 pillow
 requests
 yt_dlp

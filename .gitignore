@@ -9,3 +9,5 @@ Dataset/
 
 # Ignore test.py
 test.py
+
+*.txt

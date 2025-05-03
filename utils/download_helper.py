@@ -51,7 +51,7 @@ def download_youtube_video(url, output_path, filename="dataset.mp4", logger=None
 
         # Configure yt-dlp options
         ydl_opts = {
-            'format': 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best[height<=720]',  # Target 720p or lower
+            'format': 'bestvideo[height<=640][ext=mp4]+bestaudio[ext=m4a]/best[height<=640][ext=mp4]/best[height<=640]',  # Target 640p or lower
             'outtmpl': os.path.join(output_path, filename),
             'quiet': True,
             'no_warnings': True,
