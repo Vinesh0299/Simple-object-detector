@@ -1,1 +1,4 @@
 torch
+pillow
+requests
+yt_dlp

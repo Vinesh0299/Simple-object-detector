@@ -1,1 +1,11 @@
-.simple-object-detector/
+# Ignore logs
+logs/
+
+# Ignore pycache
+*/__pycache__/
+
+# Ignore dataset
+Dataset/
+
+# Ignore test.py
+test.py
