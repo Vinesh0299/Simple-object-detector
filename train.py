@@ -75,4 +75,4 @@ def train_model(logger):
 if __name__ == "__main__":
     #download_videos(logger)
     create_dataset(logger)
-    #train_model(logger)
+    train_model(logger)

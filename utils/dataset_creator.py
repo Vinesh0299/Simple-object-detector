@@ -84,6 +84,9 @@ def convert_to_frames(video_path, output_dir, logger):
             if not ret:
                 break
 
+            # Resize frame to 640x640
+            frame = cv2.resize(frame, (640, 640))
+
             # Save every nth frame
             if frame_index % frame_save_interval == 0:
                 # Update width and height for normalized calculations
@@ -176,18 +179,6 @@ def convert_to_frames(video_path, output_dir, logger):
                         if min_x < 0 or max_x > width or min_y < 0 or max_y > height:
                             # If text goes out of bounds, try again with a different position
                             continue
-                            
-                        # Resize frame to 640x640
-                        frame = cv2.resize(frame, (640, 640))
-                        
-                        # Scale the bounding box coordinates to match resized frame
-                        scale_x = 640 / width
-                        scale_y = 640 / height
-                        
-                        min_x *= scale_x
-                        max_x *= scale_x
-                        min_y *= scale_y
-                        max_y *= scale_y
                         
                         # Update text center coordinates for resized frame
                         text_center_x = (min_x + max_x) / 2
@@ -199,18 +190,6 @@ def convert_to_frames(video_path, output_dir, logger):
                         max_x = x + text_width
                         min_y = y - text_height
                         max_y = y + baseline
-                        
-                        # Resize frame to 640x640
-                        frame = cv2.resize(frame, (640, 640))
-                        
-                        # Scale the bounding box coordinates to match resized frame
-                        scale_x = 640 / width
-                        scale_y = 640 / height
-                        
-                        min_x *= scale_x
-                        max_x *= scale_x
-                        min_y *= scale_y
-                        max_y *= scale_y
                         
                         # Update text center coordinates for resized frame
                         text_center_x = (min_x + max_x) / 2
@@ -268,9 +247,6 @@ def convert_to_frames(video_path, output_dir, logger):
                     else:  # 10% for validation
                         logger.info(f"Saving to val directory")
                         save_dir = val_dir
-                        
-                    # Resize frame to 640x640
-                    frame = cv2.resize(frame, (640, 640))
 
                     frame_path = os.path.join(save_dir, f"{video_name}_frame_{frame_index:06d}.jpg")
                     cv2.imwrite(frame_path, frame)
