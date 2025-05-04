@@ -44,7 +44,7 @@ def get_random_position(width, height):
     y = random.randint(10, height - 30)
     return x, y
 
-def convert_to_frames(video_path, output_dir, logger):
+def convert_to_training_frames(video_path, output_dir, logger):
     """
     Convert a video file to a sequence of frames.
 

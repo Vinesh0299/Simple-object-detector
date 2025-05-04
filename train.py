@@ -2,7 +2,7 @@ import os
 from ultralytics import YOLO
 from utils.logger import setup_logger
 from utils.download_helper import download_youtube_video
-from utils.dataset_creator import convert_to_frames
+from utils.dataset_creator import convert_to_training_frames
 from multiprocessing import Pool
 
 logger = setup_logger(__name__)
@@ -42,7 +42,7 @@ def create_dataset(logger):
     global RAW_DIR, PROCESSED_DIR
 
     for video_file in os.listdir(RAW_DIR):
-        convert_to_frames(os.path.join(RAW_DIR, video_file), PROCESSED_DIR, logger)
+        convert_to_training_frames(os.path.join(RAW_DIR, video_file), PROCESSED_DIR, logger)
 
 def train_model(logger):
     """
