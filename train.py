@@ -73,6 +73,6 @@ def train_model(logger):
     model.save("yolo11n_trained.pt")
 
 if __name__ == "__main__":
-    #download_videos(logger)
-    #create_dataset(logger)
+    download_videos(logger)
+    create_dataset(logger)
     train_model(logger)
