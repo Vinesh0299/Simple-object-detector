@@ -56,11 +56,11 @@ def train_model(logger):
     logger.info("Training model")
     model.train(
         data="Dataset/Processed/data.yaml",
-        epochs=10,
+        epochs=20,
         imgsz=640,
-        batch=16,
+        batch=8,
         workers=1,
-        device="cpu",
+        device="cuda",
         cache=False,
         optimizer="Adam",
         patience=10,
@@ -70,9 +70,9 @@ def train_model(logger):
     
     # Save the model
     logger.info("Saving model")
-    model.save("yolo11n_trained.pt")
+    model.save("yolo11n_trained_new.pt")
 
 if __name__ == "__main__":
-    download_videos(logger)
+    #download_videos(logger)
     create_dataset(logger)
-    train_model(logger)
+    #train_model(logger)

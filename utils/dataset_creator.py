@@ -86,15 +86,12 @@ def convert_to_frames(video_path, output_dir, logger):
 
             # Save every nth frame
             if frame_index % frame_save_interval == 0:
-                # Resize frame to 640x640
-                frame = cv2.resize(frame, (640, 640))
-                
                 # Update width and height for normalized calculations
                 width = 640
                 height = 640
                 
-                # Randomly decide whether to add text to this frame (50% chance)
-                if random.random() < 0.5:
+                # Randomly decide whether to add text to this frame (70% chance)
+                if random.random() < 0.7:
                     # Add random alphanumeric text to the frame
                     # Generate random text in format XXXX-XXXXXX-XXXX
                     
@@ -107,18 +104,21 @@ def convert_to_frames(video_path, output_dir, logger):
 
                     # Add text to the frame
                     fonts = [
-                        cv2.FONT_HERSHEY_SERIF,  # Times New Roman-like serif font
+                        cv2.FONT_HERSHEY_PLAIN,  # Times New Roman-like serif font
                         cv2.FONT_HERSHEY_COMPLEX,  # Similar to Times New Roman
                         cv2.FONT_HERSHEY_TRIPLEX,  # Bold serif font
                         cv2.FONT_HERSHEY_COMPLEX_SMALL  # Smaller serif font
                     ]
                     font = random.choice(fonts)
-                    font_scale = random.uniform(0.5, 1.5)  # Random font size
+                    font_scale = random.uniform(0.3, 0.7)  # Random font size
                     font_thickness = random.randint(1, 3)  # Random thickness
                     font_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))  # Random color
                     
-                    # Get text size
-                    (text_width, text_height), baseline = cv2.getTextSize(random_text, font, font_scale, font_thickness)
+                    # Add spacing between characters
+                    spaced_text = '  '.join(random_text)
+                    
+                    # Get text size with spacing
+                    (text_width, text_height), baseline = cv2.getTextSize(spaced_text, font, font_scale, font_thickness)
                     
                     # Calculate text bounding box
                     text_center_x = x + text_width // 2
@@ -139,8 +139,8 @@ def convert_to_frames(video_path, output_dir, logger):
                     
                     # Create a blank image for the text
                     text_img = np.zeros((height, width, 3), dtype=np.uint8)
-                    cv2.putText(text_img, random_text, (x, y), font, font_scale, font_color, font_thickness)
-                    
+                    cv2.putText(text_img, spaced_text, (x, y), font, font_scale, font_color, font_thickness)
+
                     # Randomly decide whether to rotate the text (50% chance)
                     if random.random() < 0.5:
                         # Random rotation angle (-30 to 30 degrees)
@@ -176,6 +176,22 @@ def convert_to_frames(video_path, output_dir, logger):
                         if min_x < 0 or max_x > width or min_y < 0 or max_y > height:
                             # If text goes out of bounds, try again with a different position
                             continue
+                            
+                        # Resize frame to 640x640
+                        frame = cv2.resize(frame, (640, 640))
+                        
+                        # Scale the bounding box coordinates to match resized frame
+                        scale_x = 640 / width
+                        scale_y = 640 / height
+                        
+                        min_x *= scale_x
+                        max_x *= scale_x
+                        min_y *= scale_y
+                        max_y *= scale_y
+                        
+                        # Update text center coordinates for resized frame
+                        text_center_x = (min_x + max_x) / 2
+                        text_center_y = (min_y + max_y) / 2
                     else:
                         # Add text without rotation
                         frame = cv2.addWeighted(frame, 1, text_img, 1, 0)
@@ -183,6 +199,22 @@ def convert_to_frames(video_path, output_dir, logger):
                         max_x = x + text_width
                         min_y = y - text_height
                         max_y = y + baseline
+                        
+                        # Resize frame to 640x640
+                        frame = cv2.resize(frame, (640, 640))
+                        
+                        # Scale the bounding box coordinates to match resized frame
+                        scale_x = 640 / width
+                        scale_y = 640 / height
+                        
+                        min_x *= scale_x
+                        max_x *= scale_x
+                        min_y *= scale_y
+                        max_y *= scale_y
+                        
+                        # Update text center coordinates for resized frame
+                        text_center_x = (min_x + max_x) / 2
+                        text_center_y = (min_y + max_y) / 2
                     
                     # Draw bounding box
                     # box_color = (0, 255, 0)  # Green color
@@ -237,6 +269,9 @@ def convert_to_frames(video_path, output_dir, logger):
                         logger.info(f"Saving to val directory")
                         save_dir = val_dir
                         
+                    # Resize frame to 640x640
+                    frame = cv2.resize(frame, (640, 640))
+
                     frame_path = os.path.join(save_dir, f"{video_name}_frame_{frame_index:06d}.jpg")
                     cv2.imwrite(frame_path, frame)
 
