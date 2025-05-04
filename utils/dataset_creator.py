@@ -86,6 +86,13 @@ def convert_to_frames(video_path, output_dir, logger):
 
             # Save every nth frame
             if frame_index % frame_save_interval == 0:
+                # Resize frame to 640x640
+                frame = cv2.resize(frame, (640, 640))
+                
+                # Update width and height for normalized calculations
+                width = 640
+                height = 640
+                
                 # Randomly decide whether to add text to this frame (50% chance)
                 if random.random() < 0.5:
                     # Add random alphanumeric text to the frame
@@ -163,13 +170,13 @@ def convert_to_frames(video_path, output_dir, logger):
                         continue
                     
                     # Draw bounding box
-                    box_color = (0, 255, 0)  # Green color
-                    box_thickness = 2
-                    cv2.rectangle(frame, 
-                                (int(min_x), int(min_y)), 
-                                (int(max_x), int(max_y)), 
-                                box_color, 
-                                box_thickness)
+                    # box_color = (0, 255, 0)  # Green color
+                    # box_thickness = 2
+                    # cv2.rectangle(frame, 
+                    #             (int(min_x), int(min_y)), 
+                    #             (int(max_x), int(max_y)), 
+                    #             box_color, 
+                    #             box_thickness)
 
                     logger.info(f"Text: {random_text}, Center: ({text_center_x}, {text_center_y}), Size: ({text_width}, {text_height}), Position: ({x}, {y})")
 

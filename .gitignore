@@ -7,7 +7,11 @@ logs/
 # Ignore dataset
 Dataset/
 
+# Ignore Runs directory
+runs/
+
 # Ignore test.py
 test.py
 
 *.txt
+*.pt
