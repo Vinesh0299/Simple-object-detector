@@ -5,7 +5,12 @@ logs/
 */__pycache__/
 
 # Ignore dataset
-Dataset/
+Dataset/raw/
+Dataset/raw-live/
+Dataset/processed-live/
+Dataset/Processed/images
+Dataset/Processed/labels
+Dataset/Processed/data.yaml
 
 # Ignore Runs directory
 runs/
