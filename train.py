@@ -56,9 +56,9 @@ def train_model(logger):
     logger.info("Training model")
     model.train(
         data="Dataset/Processed/data.yaml",
-        epochs=20,
+        epochs=50,
         imgsz=640,
-        batch=8,
+        batch=10,
         workers=1,
         device="cuda",
         cache=False,
@@ -74,5 +74,5 @@ def train_model(logger):
 
 if __name__ == "__main__":
     #download_videos(logger)
-    create_dataset(logger)
+    #create_dataset(logger)
     train_model(logger)
