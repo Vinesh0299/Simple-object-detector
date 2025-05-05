@@ -83,23 +83,29 @@ def consumer():
                             # Convert xywh to xyxy for drawing
                             x, y, w, h = box
                             w *= 1.3  # Increase width by 30%
-                            h *= 1.8  # Increase height by 60%
+                            h *= 1.7  # Increase height by 60%
                             x1 = int(x - w/2)
                             y1 = int(y - h/2)
                             x2 = int(x + w/2)
                             y2 = int(y + h/2)
                             
-                            # Draw rectangle
-                            cv2.rectangle(frame_copy, (x1, y1), (x2, y2), (255, 0, 0), 2)
-                            # Add label
-                            label = f"{name} {conf:.2f}"
-                            cv2.putText(frame_copy, label, (x1, y1-10), 
-                                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-                    
-                    # Save the modified frame
-                    id = uuid4()
-                    cv2.imwrite(f"{RESULTS_DIR}/result_{id}.jpg", frame_copy)
-                    cv2.imwrite(f"{PROCESSED_DIR}/raw_result_{id}.jpg", frame_chunk[i])
+                            # Get frame dimensions
+                            height, width = frame_copy.shape[:2]
+                            
+                            # Ensure coordinates are within frame boundaries
+                            x1 = max(0, min(x1, width))
+                            y1 = max(0, min(y1, height))
+                            x2 = max(0, min(x2, width))
+                            y2 = max(0, min(y2, height))
+                            
+                            # Only proceed if the box has valid dimensions
+                            if x2 > x1 and y2 > y1:
+                                # Save the modified frame
+                                id = uuid4()
+                                # Crop the frame to the modified box dimensions
+                                cropped_frame = frame_copy[y1:y2, x1:x2]
+                                if not cropped_frame.size == 0:  # Additional check for empty frame
+                                    cv2.imwrite(f"{RESULTS_DIR}/cropped_result_{id}.jpg", cropped_frame)
             
             frame_queue.task_done()
             
