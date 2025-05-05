@@ -67,18 +67,38 @@ def consumer():
             results = model(frame_chunk, imgsz=640)
 
             for i, result in enumerate(results):
-                # Access the results
-                xywh = result.boxes.xywh  # center-x, center-y, width, height
-                xywhn = result.boxes.xywhn  # normalized
-                xyxy = result.boxes.xyxy  # top-left-x, top-left-y, bottom-right-x, bottom-right-y
-                xyxyn = result.boxes.xyxyn  # normalized
-                names = [result.names[cls.item()] for cls in result.boxes.cls.int()]  # class name of each box
-                confs = result.boxes.conf  # confidence score of each box
-
-                # Only save frames where at least one detection has confidence > 0.5
+                # Create a copy of the frame
+                frame_copy = frame_chunk[i].copy()
+                
+                # Get the original boxes
+                boxes = result.boxes.xywh
+                confs = result.boxes.conf
+                names = [result.names[cls.item()] for cls in result.boxes.cls.int()]
+                
+                # Only process frames with high confidence detections
                 if names and any(conf > 0.7 for conf in confs):
+                    # Draw modified boxes on the frame copy
+                    for box, conf, name in zip(boxes, confs, names):
+                        if conf > 0.7:
+                            # Convert xywh to xyxy for drawing
+                            x, y, w, h = box
+                            w *= 1.3  # Increase width by 30%
+                            h *= 1.8  # Increase height by 60%
+                            x1 = int(x - w/2)
+                            y1 = int(y - h/2)
+                            x2 = int(x + w/2)
+                            y2 = int(y + h/2)
+                            
+                            # Draw rectangle
+                            cv2.rectangle(frame_copy, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                            # Add label
+                            label = f"{name} {conf:.2f}"
+                            cv2.putText(frame_copy, label, (x1, y1-10), 
+                                      cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+                    
+                    # Save the modified frame
                     id = uuid4()
-                    result.save(f"{RESULTS_DIR}/result_{id}.jpg")
+                    cv2.imwrite(f"{RESULTS_DIR}/result_{id}.jpg", frame_copy)
                     cv2.imwrite(f"{PROCESSED_DIR}/raw_result_{id}.jpg", frame_chunk[i])
             
             frame_queue.task_done()
