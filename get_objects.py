@@ -40,7 +40,7 @@ def download_videos(logger):
             for line in f:
                 url = line.strip()
                 if url:
-                    urls.append((url, RAW_DIR, f"dataset_{file_count}.mp4", logger))
+                    urls.append((url, RAW_DIR, f"dataset_{line.strip().split('v=')[-1]}.mp4", logger))
                     file_count += 1
 
         # Download videos in parallel
@@ -178,5 +178,8 @@ def get_localized_objects(logger):
     logger.info(f"Total time taken: {end_time - start_time} seconds")
 
 if __name__ == "__main__":
-    #download_videos(logger)
+    start_time = time.time()
+    download_videos(logger)
     get_localized_objects(logger)
+    end_time = time.time()
+    logger.info(f"Total Overall time taken: {end_time - start_time} seconds")

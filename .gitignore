@@ -20,3 +20,5 @@ test.py
 
 *.txt
 *.pt
+
+.env
