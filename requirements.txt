@@ -3,3 +3,6 @@ ultralytics
 pillow
 requests
 yt_dlp
+google-api-python-client
+playsound
+python-dotenv
