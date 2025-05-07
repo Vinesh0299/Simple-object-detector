@@ -22,3 +22,6 @@ test.py
 *.pt
 
 .env
+
+# Ignore Notification folder
+Notification/
